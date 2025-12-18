@@ -9,10 +9,10 @@ import com.arcrobotics.ftclib.hardware.motors.Motor;
  */
 public class MecanumConfigs {
     // Default values. All values were tuned with the 2023-2024 robot in mind. Future iterations may require adjustments
-    private Translation2d m_frontLeftPositionMeters = new Translation2d(0.178, 0.168);
-    private Translation2d m_frontRightPositionMeters = new Translation2d(0.178, -0.168);
-    private Translation2d m_backLeftPositionMeters = new Translation2d(-0.178, 0.168);
-    private Translation2d m_backRightPositionMeters = new Translation2d(-0.178, -0.168);
+    private Translation2d m_frontLeftPositionMeters = new Translation2d(0.17, 0.185);
+    private Translation2d m_frontRightPositionMeters = new Translation2d(0.17, -0.185);
+    private Translation2d m_backLeftPositionMeters = new Translation2d(-0.17, 0.185);
+    private Translation2d m_backRightPositionMeters = new Translation2d(-0.17, -0.185);
     private double m_maxRobotSpeedMps = 2.5;
     private double m_maxRobotRotationRps = 6.28;
     private double m_metersPerTick = 0.00056; // Based on wheel geometry
