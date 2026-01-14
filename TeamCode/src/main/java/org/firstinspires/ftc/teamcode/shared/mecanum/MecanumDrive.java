@@ -140,7 +140,7 @@ public class MecanumDrive extends SubsystemBase {
 //      odo = hardwareMap.get(GoBildaPinpointDriver.class, "odo");
 //      odo.setOffsets(-84.0, -168.0, DistanceUnit.MM);
 //      odo.setEncoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD);
-//      odo.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.FORWARD, GoBildaPinpointDriver.EncoderDirection.FORWARD);
+    //      odo.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.FORWARD, GoBildaPinpointDriver.EncoderDirection.FORWARD);
 //      odo.setPosition(GOCinitialPose);
     }
 

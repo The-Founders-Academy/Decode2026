@@ -14,7 +14,6 @@ import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.teamcode.current.subsytems.Arm2025;
 import org.firstinspires.ftc.teamcode.shared.mecanum.MecanumConfigs;
 import org.firstinspires.ftc.teamcode.shared.mecanum.MecanumDrive;
 
@@ -24,7 +23,6 @@ public class RobotRelativeDrive extends LinearOpMode {
 
 
     public MecanumDrive m_mecanumDrive;
-    public Arm2025 m_armSubsystem;
 
     public MotorEx m_frontLeft, m_frontRight, m_backLeft, m_backRight;
 
@@ -59,9 +57,7 @@ public class RobotRelativeDrive extends LinearOpMode {
         MecanumConfigs configs = new MecanumConfigs().runMode(MotorEx.RunMode.RawPower);
 
         m_mecanumDrive = new MecanumDrive(hardwareMap, configs, new Pose2d(0, 0, Rotation2d.fromDegrees(90)), MecanumDrive.Alliance.RED);
-        m_armSubsystem = new Arm2025(hardwareMap);
 
-        double armPosition = (int) m_armSubsystem.getARM_COLLAPSED_INTO_ROBOT();
         /*
         These variables are private to the OpMode, and are used to control the drivetrain.
          */
@@ -153,19 +149,6 @@ public class RobotRelativeDrive extends LinearOpMode {
 
 
 
-
-
-            if (gamepad2.left_bumper) {
-                intake.setPower(m_armSubsystem.getINTAKE_COLLECT());
-            }
-            else if (gamepad2.right_bumper) {
-                intake.setPower(m_armSubsystem.getINTAKE_DEPOSIT());
-            }
-            else if (gamepad2.y) {
-                intake.setPower(m_armSubsystem.getINTAKE_OFF());
-            }
-
-
             /* this "FUDGE_FACTOR" allows you to move +15 and -15 degrees outside of the target position set, by holding down
             the left or right trigger. So if your target position was 160 degrees, you could really be anywhere from 145 to
             175. This helps to fine tune arm position for things like hanging. May remove later.
@@ -181,55 +164,7 @@ public class RobotRelativeDrive extends LinearOpMode {
             it folds out the wrist to make sure it is in the correct orientation to intake, and it
             turns the intake on to the COLLECT mode.*/
 
-            if(gamepad2.a){
-                /* This is the intaking/collecting arm position */
-                armPosition = m_armSubsystem.getARM_COLLECT();
-//                liftPosition = LIFT_COLLAPSED;
-                wrist.setPosition(m_armSubsystem.getWRIST_FOLDED_OUT());
-//                intake.setPower(robot.INTAKE_COLLECT);
 
-            }
-
-            else if (gamepad2.b){
-                    /*This is about 20° up from the collecting position to clear the barrier
-                    Note here that we don't set the wrist position or the intake power when we
-                    select this "mode", this means that the intake and wrist will continue what
-                    they were doing before we clicked left bumper. */
-                armPosition = m_armSubsystem.getARM_CLEAR_BARRIER();
-            }
-
-            else if (gamepad2.x){
-                /* This is the correct height to score the sample in the LOW BASKET */
-                armPosition = m_armSubsystem.getARM_SCORE_SAMPLE_IN_LOW();
-            }
-
-            else if (gamepad2.dpad_down) {
-                    /* This turns off the intake, folds in the wrist, and moves the arm
-                    back to folded inside the robot. This is also the starting configuration */
-                armPosition = m_armSubsystem.getARM_COLLAPSED_INTO_ROBOT();
-                //liftPosition = LIFT_COLLAPSED;
-                wrist.setPosition(m_armSubsystem.getWRIST_FOLDED_IN());
-            }
-
-            else if (gamepad2.dpad_left){
-                /* This is the correct height to score SPECIMEN on the HIGH CHAMBER */
-                armPosition = m_armSubsystem.getARM_SCORE_SPECIMEN();
-                wrist.setPosition(m_armSubsystem.getWRIST_FOLDED_IN());
-            }
-
-            else if (gamepad2.dpad_up){
-                /* This sets the arm to vertical to hook onto the LOW RUNG for hanging */
-                  armPosition = m_armSubsystem.getARM_ATTACH_HANGING_HOOK();
-//                robot.intake.setPower(robot.INTAKE_OFF);
-                  wrist.setPosition(m_armSubsystem.getWRIST_FOLDED_IN());
-            }
-
-            else if (gamepad2.dpad_right){
-                /* this moves the arm down to lift the robot up once it has been hooked */
-                  armPosition = m_armSubsystem.getARM_WINCH_ROBOT();
-//                robot.intake.setPower(robot.INTAKE_OFF);
-
-            }
 
 //            else if (gamepad2.y) {
 //                liftPosition = robot.LIFT_SCORING_IN_HIGH_BASKET;
@@ -252,10 +187,6 @@ public class RobotRelativeDrive extends LinearOpMode {
             by the driver. We add the armPosition Variable to our armPositionFudgeFactor.
             We also set the target velocity (speed) the motor runs at, and use setMode to run it.*/
 
-            armMotor.setTargetPosition((int) (armPosition + armPositionFudgeFactor));
-
-            ((DcMotorEx) armMotor).setVelocity(2100);
-            armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         }
     }
 }
