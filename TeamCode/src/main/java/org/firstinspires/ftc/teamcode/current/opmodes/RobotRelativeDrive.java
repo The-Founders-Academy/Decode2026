@@ -14,6 +14,7 @@ import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.teamcode.current.subsytems.Launcher2026;
 import org.firstinspires.ftc.teamcode.shared.mecanum.MecanumConfigs;
 import org.firstinspires.ftc.teamcode.shared.mecanum.MecanumDrive;
 
@@ -25,47 +26,17 @@ public class RobotRelativeDrive extends LinearOpMode {
     public MecanumDrive m_mecanumDrive;
 
     public MotorEx m_frontLeft, m_frontRight, m_backLeft, m_backRight;
-
-
-    DcMotor armMotor = null; //the arm motor
-    Servo wrist = null; //the wrist servo
-
-    CRServo intake = null; // intake continuous servo
-
-    final double ARM_TICKS_PER_DEGREE =
-            28 // number of encoder ticks per rotation of the bare motor
-                    * 250047.0 / 4913.0 // This is the exact gear ratio of the 50.9:1 Yellow Jacket gearbox
-                    * 100.0 / 20.0 // This is the external gear reduction, a 20T pinion gear that drives a 100T hub-mount gear
-                    * 1 / 360.0; // we want ticks per degree, not per rotation
-
-
-    /* A number in degrees that the triggers can adjust the arm position by */
-    final double FUDGE_FACTOR = 15 * ARM_TICKS_PER_DEGREE;
-
-    /* Variables that are used to set the arm to a specific position in later functions*/
-
-    double armPositionFudgeFactor;
-
+    private Launcher2026 launchSubsystem;
 
     @Override
     public void runOpMode() {
+        launchSubsystem = new Launcher2026(hardwareMap);
 
-        armMotor = hardwareMap.get(DcMotor.class, "arm");
-        intake = hardwareMap.get(CRServo.class, "intake");
-        wrist = hardwareMap.get(Servo.class, "wrist");
 
         MecanumConfigs configs = new MecanumConfigs().runMode(MotorEx.RunMode.RawPower);
 
         m_mecanumDrive = new MecanumDrive(hardwareMap, configs, new Pose2d(0, 0, Rotation2d.fromDegrees(90)), MecanumDrive.Alliance.RED);
 
-        /*
-        These variables are private to the OpMode, and are used to control the drivetrain.
-         */
-        double left;
-        double right;
-        double forward;
-        double rotate;
-        double max;
 
         // Initializes the drive motors to the correct hardwaremap
         m_frontLeft = new MotorEx(hardwareMap,"fL", Motor.GoBILDA.RPM_312);
@@ -132,60 +103,17 @@ public class RobotRelativeDrive extends LinearOpMode {
 
             // DRIVER COMMANDS
 
-            if (gamepad1.options) {
+            if (gamepad1.a) {
                 imu.resetYaw();
             }
 
-
-            // OPERATOR COMMANDS
-
-            /* Here we handle the three buttons that have direct control of the intake speed.
-            These control the continuous rotation servo that pulls elements into the robot,
-            If the user presses A, it sets the intake power to the final variable that
-            holds the speed we want to collect at.
-            If the user presses X, it sets the servo to Off.
-            And if the user presses B it reveres the servo to spit out the element.*/
+            if(gamepad1.x) {
+                launchSubsystem.launch();
+            } else {
+                launchSubsystem.resetPower();
+            }
 
 
-
-
-            /* this "FUDGE_FACTOR" allows you to move +15 and -15 degrees outside of the target position set, by holding down
-            the left or right trigger. So if your target position was 160 degrees, you could really be anywhere from 145 to
-            175. This helps to fine tune arm position for things like hanging. May remove later.
-             */
-
-            armPositionFudgeFactor = FUDGE_FACTOR * (gamepad2.right_trigger + (-gamepad2.left_trigger));
-
-
-            /* Here we implement a set of if else statements to set our arm to different scoring positions.
-            We check to see if a specific button is pressed, and then move the arm (and sometimes
-            intake and wrist) to match. For example, if we click the right bumper we want the robot
-            to start collecting. So it moves the armPosition to the ARM_COLLECT position,
-            it folds out the wrist to make sure it is in the correct orientation to intake, and it
-            turns the intake on to the COLLECT mode.*/
-
-
-
-//            else if (gamepad2.y) {
-//                liftPosition = robot.LIFT_SCORING_IN_HIGH_BASKET;
-//            }
-//
-//            else if (gamepad2.a) {
-//                liftPosition = robot.LIFT_COLLAPSED;
-//            }
-
-
-//            if (armPosition < 45 * robot.ARM_TICKS_PER_DEGREE){
-//                armLiftComp = (0.25568 * liftPosition);
-//            }
-//            else{
-//                armLiftComp = 0;
-//            }
-
-
-           /* Here we set the target position of our arm to match the variable that was selected
-            by the driver. We add the armPosition Variable to our armPositionFudgeFactor.
-            We also set the target velocity (speed) the motor runs at, and use setMode to run it.*/
 
         }
     }

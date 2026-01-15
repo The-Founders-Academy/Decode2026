@@ -14,10 +14,11 @@ public class Launcher2026 extends SubsystemBase {
         intake1 = hardwareMap.get(CRServo.class, "wrist");
         intake2 = hardwareMap.get(CRServo.class, "wrist2");
         launcher = hardwareMap.get(DcMotor.class, "launcher");
+
+        launcher.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
    }
 
    public void launch() {
-        launcher.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         launcher.setPower(0.2);
 
         intake1.setPower(1);

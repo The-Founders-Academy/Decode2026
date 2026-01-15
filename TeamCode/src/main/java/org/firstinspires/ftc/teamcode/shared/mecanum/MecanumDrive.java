@@ -73,6 +73,10 @@ public class MecanumDrive extends SubsystemBase {
     public VoltageSensor voltageSensor;
     public double currentVoltage;
 
+    private Motor.Encoder leftEncoder;
+    private Motor.Encoder rightEncoder;
+    private Motor.Encoder horizontalEncoder;
+
 
     public MecanumDrive(HardwareMap hardwareMap, MecanumConfigs mecanumConfigs, Pose2d initialPose, Alliance alliance) {
         m_mecanumConfigs = mecanumConfigs;
@@ -111,17 +115,20 @@ public class MecanumDrive extends SubsystemBase {
         }
 
         double cm_per_tick = 2 * Math.PI * deadWheelRadiusCentimeters / ticksPerRevolution;
-        Motor.Encoder left = m_frontRight.encoder.setDistancePerPulse(cm_per_tick);
-        left.setDirection(Motor.Direction.REVERSE);
-        Motor.Encoder right = m_frontLeft.encoder.setDistancePerPulse(cm_per_tick);
-        right.setDirection(Motor.Direction.REVERSE);
-        Motor.Encoder horizontal = m_backLeft.encoder.setDistancePerPulse(cm_per_tick);
-        horizontal.setDirection(Motor.Direction.REVERSE);
+
+        leftEncoder = m_frontRight.encoder.setDistancePerPulse(cm_per_tick);
+        leftEncoder.setDirection(Motor.Direction.REVERSE);
+
+        rightEncoder = m_frontLeft.encoder.setDistancePerPulse(cm_per_tick);
+        rightEncoder.setDirection(Motor.Direction.REVERSE);
+
+        horizontalEncoder = m_backLeft.encoder.setDistancePerPulse(cm_per_tick);
+        horizontalEncoder.setDirection(Motor.Direction.REVERSE);
 
         m_odo = new HolonomicOdometry2025(
-                left::getDistance,
-                right::getDistance,
-                horizontal::getDistance,
+                leftEncoder::getDistance,
+                rightEncoder::getDistance,
+                horizontalEncoder::getDistance,
                 trackWidthCentimeters,
                 perpendicularOffsetCentimeters
         );
@@ -318,6 +325,18 @@ public class MecanumDrive extends SubsystemBase {
 //      odo.update();
         m_robotPose = m_odo.getPose();
         currentVoltage = voltageSensor.getVoltage();
+
+
+        // logging odo data
+        TelemetryPacket odo_data = new TelemetryPacket();
+        odo_data.put("x_cm", m_odo.getPose().getX());
+        odo_data.put("y_cm", m_odo.getPose().getY());
+        odo_data.put("heading_deg", Math.toDegrees(m_odo.getPose().getHeading()));
+
+        odo_data.put("left_raw_cm", leftEncoder.getDistance());
+        odo_data.put("right_raw_cm", rightEncoder.getDistance());
+        odo_data.put("horizontal_raw_cm", horizontalEncoder.getDistance());
+        FtcDashboard.getInstance().sendTelemetryPacket(odo_data);
     }
 
 

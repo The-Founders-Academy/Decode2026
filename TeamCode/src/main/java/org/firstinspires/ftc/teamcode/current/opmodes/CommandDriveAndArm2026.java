@@ -36,10 +36,5 @@ public class CommandDriveAndArm2026 extends CommandOpMode {
         m_driver.buttonA().whenPressed(new InstantCommand(() -> m_mecanumDrive.resetHeading()));
 
         m_driver.buttonX().whileHeld(new launchCommand(launchSubsystem));
-
-
-
-
-
     }
 }
