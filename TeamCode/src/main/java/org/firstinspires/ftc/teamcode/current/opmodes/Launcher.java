@@ -15,23 +15,26 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.current.subsytems.Arm2025;
+import org.firstinspires.ftc.teamcode.current.subsytems.Launcher2026;
 import org.firstinspires.ftc.teamcode.shared.mecanum.MecanumConfigs;
 import org.firstinspires.ftc.teamcode.shared.mecanum.MecanumDrive;
 
 @TeleOp()
 //@Disabled
-public class RobotRelativeDrive extends LinearOpMode {
+public class Launcher extends LinearOpMode {
 
 
     public MecanumDrive m_mecanumDrive;
-
+    private Launcher2026 launcherSubsystem;
     public MotorEx m_frontLeft, m_frontRight, m_backLeft, m_backRight;
 
 
 
 
 
-
+    public void initialize() {
+        launcherSubsystem = new Launcher2026(hardwareMap);
+    }
 
 
 
@@ -121,8 +124,9 @@ public class RobotRelativeDrive extends LinearOpMode {
             if (gamepad1.options) {
                 imu.resetYaw();
             }
-
-
+            if (gamepad1.a) {
+                launcherSubsystem.powerLauncher(10);
+            }
 
             // OPERATOR COMMANDS
 
@@ -143,7 +147,7 @@ public class RobotRelativeDrive extends LinearOpMode {
 
 
 
-          
+
         }
     }
 }
