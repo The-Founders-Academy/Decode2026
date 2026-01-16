@@ -107,11 +107,11 @@ public class RobotRelativeDrive extends LinearOpMode {
                 imu.resetYaw();
             }
 
-            if(gamepad1.x) {
-                launchSubsystem.launch();
-            } else {
-                launchSubsystem.resetPower();
-            }
+//            if(gamepad1.x) {
+//                launchSubsystem.launch();
+//            } else {
+//                launchSubsystem.resetPower();
+//            }
 
 
 
