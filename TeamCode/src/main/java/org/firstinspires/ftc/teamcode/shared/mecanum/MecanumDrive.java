@@ -52,7 +52,7 @@ public class MecanumDrive extends SubsystemBase {
     public double deadWheelRadiusCentimeters = 2.4;
 
     public double ticksPerRevolution = 2000.0;
-    public double trackWidthCentimeters = 36.3;
+    public double trackWidthCentimeters = 21.9;
     double perpendicularOffsetCentimeters = 20.32;
 
     public static double TranslationToleranceCentimeters = 0.5;
