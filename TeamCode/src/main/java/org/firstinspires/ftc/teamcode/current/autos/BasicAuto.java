@@ -22,38 +22,11 @@ public class BasicAuto extends CommandOpMode {
 
     @Override
     public void initialize() {
-        MecanumConfigs mecanumConfigs =
-                new MecanumConfigs().runMode(Motor.RunMode.RawPower);
+        MecanumConfigs mecanumConfigs = new MecanumConfigs().runMode(Motor.RunMode.RawPower);
 
-        double startHeadingDeg = 45.0;
-
-        Pose2d startPose =
-                new Pose2d(76.6, 159.3, Rotation2d.fromDegrees(startHeadingDeg));
-
-        m_mecanumDrive =
-                new MecanumDrive(
-                        hardwareMap,
-                        mecanumConfigs,
-                        startPose,
-                        MecanumDrive.Alliance.BLUE);
-
+        m_mecanumDrive = new MecanumDrive(hardwareMap, mecanumConfigs, new Pose2d(-150, -40, Rotation2d.fromDegrees(0)), MecanumDrive.Alliance.BLUE);
         m_launcher = new Launcher2026(hardwareMap);
 
-        Rotation2d heading = startPose.getRotation();
-        double distance = 45.0;
-
-        Pose2d targetPose =
-                new Pose2d(
-                        startPose.getX() - distance * heading.getCos(),
-                        startPose.getY() - distance * heading.getSin(),
-                        heading);
-
-        CommandScheduler.getInstance().schedule(
-                new SequentialCommandGroup(
-                        new DriveToPosition(m_mecanumDrive, targetPose).withTimeout(1500L),
-
-                        new launchCommand(m_launcher).withTimeout(2000L)
-                )
-        );
+        CommandScheduler.getInstance().schedule(  new DriveToPosition(m_mecanumDrive, new Pose2d(-100, -40, Rotation2d.fromDegrees(0))).withTimeout(2000) );
     }
 }
